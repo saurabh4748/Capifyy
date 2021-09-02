@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Image Captioning</title>
+	 
+	
+	  <!-- Google Fonts -->
+	  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+	
+
+
+
+<style>
+
+body {
+  font-family: "Open Sans", sans-serif;
+  color: #444444;
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #5faee3;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Raleway", sans-serif;
+}
+
+/*--------------------------------------------------------------
+# Back to top button
+--------------------------------------------------------------*/
+.back-to-top {
+  position: fixed;
+  visibility: hidden;
+  opacity: 0;
+  right: 15px;
+  bottom: 15px;
+  z-index: 996;
+  background: #3498db;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  transition: all 0.4s;
+}
+
+.back-to-top i {
+  font-size: 28px;
+  color: #fff;
+  line-height: 0;
+}
+
+.back-to-top:hover {
+  background: #57aae1;
+  color: #fff;
+}
+
+.back-to-top.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+/*--------------------------------------------------------------
+# Disable AOS delay on mobile
+--------------------------------------------------------------*/
+@media screen and (max-width: 768px) {
+  [data-aos-delay] {
+    transition-delay: 0 !important;
+  }
+}
+
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+#header {
+  z-index: 997;
+  transition: all 0.5s;
+  padding: 22px 0;
+  background: #fff;
+}
+
+#header.header-scrolled {
+  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+  padding: 12px 0;
+}
+
+#header .logo h1 {
+  font-size: 30px;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+#header .logo h1 a, #header .logo h1 a:hover {
+  color: #222222;
+  text-decoration: none;
+}
+
+#header .logo img {
+  padding: 0;
+  margin: 0;
+  max-height: 40px;
+}
+
+/*--------------------------------------------------------------
+# Navigation Menu
+--------------------------------------------------------------*/
+/**
+* Desktop Navigation 
+*/
+.navbar {
+  padding: 0;
+}
+
+.navbar ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  list-style: none;
+  align-items: center;
+}
+
+.navbar li {
+  position: relative;
+}
+
+.navbar a, .navbar a:focus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0 10px 30px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #555555;
+  white-space: nowrap;
+  transition: 0.3s;
+}
+
+.navbar a i, .navbar a:focus i {
+  font-size: 12px;
+  line-height: 0;
+  margin-left: 5px;
+}
+
+.navbar a:hover, .navbar .active, .navbar .active:focus, .navbar li:hover > a {
+  color: #3498db;
+}
+
+.navbar .getstarted {
+  background: #3498db;
+  padding: 8px 25px;
+  margin-left: 30px;
+  border-radius: 50px;
+  color: #fff;
+}
+
+.navbar .getstarted:hover {
+  color: #fff;
+  background: #4aa3df;
+}
+
+
+
+
+/**
+* Mobile Navigation 
+*/
+.mobile-nav-toggle {
+  color: #222222;
+  font-size: 28px;
+  cursor: pointer;
+  display: none;
+  line-height: 0;
+  transition: 0.5s;
+}
+
+.mobile-nav-toggle.bi-x {
+  color: #fff;
+}
+
+@media (max-width: 991px) {
+  .mobile-nav-toggle {
+    display: block;
+  }
+  .navbar ul {
+    display: none;
+  }
+}
+
+.navbar-mobile {
+  position: fixed;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(9, 9, 9, 0.9);
+  transition: 0.3s;
+  z-index: 999;
+}
+
+.navbar-mobile .mobile-nav-toggle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.navbar-mobile ul {
+  display: block;
+  position: absolute;
+  top: 55px;
+  right: 15px;
+  bottom: 15px;
+  left: 15px;
+  padding: 10px 0;
+  border-radius: 8px;
+  background-color: #fff;
+  overflow-y: auto;
+  transition: 0.3s;
+}
+
+.navbar-mobile a {
+  padding: 10px 20px;
+  font-size: 15px;
+  color: #222222;
+}
+
+.navbar-mobile a:hover, .navbar-mobile .active, .navbar-mobile li:hover > a {
+  color: #3498db;
+}
+
+.navbar-mobile .getstarted {
+  margin: 15px;
+}
+
+
+/*--------------------------------------------------------------
+# Hero Section
+--------------------------------------------------------------*/
+#hero {
+  width: 100%;
+  height: 70vh;
+  margin-top: 70px;
+}
+
+#hero h1 {
+  margin: 0 0 10px 0;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 56px;
+  color: black;
+}
+
+#hero h2 {
+  color: #484848;
+  margin-bottom: 50px;
+  font-size: 24px;
+}
+
+#hero .btn-get-started {
+  font-family: "Raleway", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 10px 30px;
+  border-radius: 50px;
+  transition: 0.5s;
+  color: #3498db;
+  border: 2px solid #3498db;
+}
+
+#hero .btn-get-started:hover {
+  background: #3498db;
+  color: #fff;
+}
+
+
+
+@media (min-width: 1024px) {
+  #hero {
+    background-attachment: fixed;
+  }
+}
+
+
+
+@media (max-width: 768px) {
+  #hero {
+    margin-top: 20px;
+  }
+  #hero h1 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  #hero h2 {
+    font-size: 18px;
+    line-height: 24px;
+    margin-bottom: 30px;
+  }
+  #hero .hero-img img {
+    width: 70%;
+  }
+}
+
+@media (max-width: 575px) {
+  #hero .hero-img img {
+    width: 80%;
+  }
+}
+
+@-webkit-keyframes up-down {
+  0% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes up-down {
+  0% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
+}
+
+/*--------------------------------------------------------------
+# Sections General
+--------------------------------------------------------------*/
+section {
+  padding: 60px 0;
+  overflow: hidden;
+}
+
+.section-bg {
+  background-color: #f7fbfe;
+}
+
+.section-title {
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+.section-title h2 {
+  font-size: 32px;
+  font-weight: bold;
+  text-transform: uppercase;
+  position: relative;
+  color: #222222;
+}
+
+.section-title h2::before, .section-title h2::after {
+  content: '';
+  width: 50px;
+  height: 2px;
+  background: #3498db;
+  display: inline-block;
+}
+
+.section-title h2::before {
+  margin: 0 15px 10px 0;
+}
+
+.section-title h2::after {
+  margin: 0 0 10px 15px;
+}
+
+.section-title p {
+  margin: 15px 0 0 0;
+}
+
+
+
+/*--------------------------------------------------------------
+# About Us
+--------------------------------------------------------------*/
+.about .content h3 {
+  font-weight: 600;
+  font-size: 26px;
+}
+
+.about .content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.about .content ul li {
+  padding-left: 28px;
+  position: relative;
+}
+
+.about .content ul li + li {
+  margin-top: 10px;
+}
+
+.about .content ul i {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  font-size: 20px;
+  color: #3498db;
+  line-height: 1;
+}
+
+.about .content p:last-child {
+  margin-bottom: 0;
+}
+
+
+
+.about .content .btn-learn-more:hover {
+  background: #3498db;
+  color: #fff;
+  text-decoration: none;
+}
+
+
+
+</style>
+
+
+</head>
+<body>
+
+
+	  <!-- ======= Header ======= -->
+	  <header id="header" class="fixed-top d-flex align-items-center">
+		<div class="container d-flex align-items-center justify-content-between">
+	
+		  <div class="logo">
+			<h1><a href="index.html">Capifyy</a></h1>
+			<!-- Uncomment below if you prefer to use an image logo -->
+			<!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+		  </div>
+	
+		  <nav id="navbar" class="navbar">
+			<ul>
+			  <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+			  <li><a class="nav-link scrollto" href="#about">How it works?</a></li>
+			  <li><a class="getstarted scrollto" href="#more-services">Get Started</a></li>
+			</ul>
+			<i class="bi bi-list mobile-nav-toggle"></i>
+		  </nav><!-- .navbar -->
+	
+		</div>
+	  </header><!-- End Header -->
+	
+	  <!-- ======= Hero Section ======= -->
+	  <section id="hero" class="d-flex align-items-center">
+	
+		<div class="container">
+		  <div class="row">
+			<div class="col-lg-12 pt-5 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
+			  <h1 data-aos="fade-up">Try our AI powered Image Captioning</h1>
+			  <h2 data-aos="fade-up" data-aos-delay="400">This model tells what your image wants to!</h2>
+			  <div data-aos="fade-up" data-aos-delay="800">
+				<a href="#more-services" class="btn-get-started scrollto">Get Started</a>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	
+	  </section><!-- End Hero -->
+	
+	  <main id="main">
+	
+		
+		<!-- ======= About Us Section ======= -->
+		<section id="about" class="about">
+		  <div class="container">
+	
+			<div class="section-title" data-aos="fade-up">
+			  <h2>How it works?</h2>
+			</div>
+	
+			<div class="row content">
+			  <div class="col-lg-6" data-aos="fade-up" data-aos-delay="150">
+				<p>
+					It is a process which involve these steps:
+				</p>
+				<ul>
+				  <li><i class="ri-check-double-line"></i>- Website takes in any random picture.</li>
+				  <li><i class="ri-check-double-line"></i>- Then, it will process, by discovering relevant words that the
+					image contains with the word set for which the model is trained
+					for. It will then make a meaningful sentence out of it.</li>
+				  <li><i class="ri-check-double-line"></i>- It will display the photo as well as generates the relevant caption
+					below it.</li>
+				</ul>
+			  </div>
+			  <div class="col-lg-6 pt-4 pt-lg-0" data-aos="fade-up" data-aos-delay="300">
+				<p>
+					Recurrent Neural Network (RNN) are increasingly being used as encoding-decoding frameworks for machine translation. 
+					My objective is to replace the encoder part of the RNN with a Convolutional Neural Network (CNN). Thus, transforming the images into relevant input data to feed into the decoder of the RNN. The image will be converted into a multi-feature dataset, characterizing its distinctive features. 
+					The analysis will be carried out on the popular Flickr8K dataset and coco dataset.
+				</p>
+			  </div>
+			</div>
+	
+		  </div>
+		</section><!-- End About Us Section -->
+	
+		
+		
+		<!-- ======= More Services Section ======= -->
+		<section id="more-services" class="more-services">
+		  <div class="container">
+
+			<div class="section-title" data-aos="fade-up">
+				<h2>Get Started</h2>
+			  </div>
+	
+			<div class="row" style='background-color: #0001; padding: 2%;' >
+			  <div class="col-md-12" >
+				<div class="card" data-aos="fade-up" data-aos-delay="100">
+				  <div class="card-body">
+					<br>
+					<form class="form-inline" method="POST" action="/" enctype="multipart/form-data"> 
+						<label><b> Image : &nbsp;&nbsp; </b></label>
+						<input class="form-control" type="file" name="userfile" placeholder="Your image">
+						<button type="submit" class="btn btn-primary"> Submit</button>
+					</form><br>
+					<p class="card-text"> Upload your image to generate a caption...</p>
+					<br>
+				  </div>
+				</div>
+			  </div>
+			  <br><br>
+			  <div class="col-md-12">
+				<div class="card" data-aos="fade-up" data-aos-delay="200">
+				  <div class="card-body">
+					{% if your_result %}
+					<p class="text"> Generated Caption : </p>
+					<img src ="{{your_result['image']}}" width="100%"> <br>
+			 		<p> <b>{{ your_result['caption'] }} </b> </p>
+				
+		{% endif %}
+				
+				</div>
+	
+			  
+	
+		  </div>
+		</section><!-- End More Services Section -->
+	
+	
+
+
+
+
+</body>
+</html>
